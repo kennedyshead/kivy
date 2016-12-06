@@ -108,6 +108,10 @@ build_script:
 
     Check-Error
 
+    python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
+
+    Check-Error
+
     python -c "import sys;print('Python version is {}'.format(sys.version))"
 
     Check-Error
