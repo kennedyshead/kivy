@@ -104,7 +104,7 @@ build_script:
 
     Check-Error
 
-    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER', 'kivy', '__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION','"+$WHEEL_VERSION+"_"+$WHEEL_DATE+"_git_"+$GIT_TAG+"');f.close();f=open(kv,'w');f.write(s);f.close()"
+    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER', 'kivy', '__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION','$WHEEL_VERSION`_$WHEEL_DATE`_git_$GIT_TAG');f.close();f=open(kv,'w');f.write(s);f.close()"
 
     Check-Error
 
