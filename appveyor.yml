@@ -241,9 +241,9 @@ build_script:
 
       $WHEEL_FNAME = python -c "from os import listdir;print(listdir(r'$env:WHEEL_DIR')[0])"
       Check-Error
-      $WHEEL_NIG_NAME = $WHEEL_FNAME.Replace($WHEEL_VERSION, "nightly")
-      echo "Copying $env:WHEEL_DIR\$WHEEL_FNAME to $env:WHEEL_DIR\nightly-$WHEEL_NIG_NAME"
-      Copy-Item "$env:WHEEL_DIR\$WHEEL_FNAME" "$env:WHEEL_DIR\nightly-$WHEEL_NIG_NAME"
+      $WHEEL_NIG_NAME = $WHEEL_FNAME.Replace($WHEEL_VERSION.Replace("-","."), "nightly")
+      echo "Copying $env:WHEEL_DIR\$WHEEL_FNAME to $env:WHEEL_DIR\$WHEEL_NIG_NAME"
+      Copy-Item "$env:WHEEL_DIR\$WHEEL_FNAME" "$env:WHEEL_DIR\$WHEEL_NIG_NAME"
       Check-Error
       $NEW_WHEEL_FNAME = python -c "print('$WHEEL_FNAME'.replace('-cp', '$WHEEL_NAME', 1))"
       Check-Error
