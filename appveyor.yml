@@ -19,14 +19,14 @@ environment:
   USE_GSTREAMER: 1
   KIVY_USE_SETUPTOOLS: 1
   matrix:
+  - PYVER: 27
+    BITTNESS: 86
+  - PYVER: 35
+    BITTNESS: 86
+    COMPILER: msvc
   - PYVER: 35
     BITTNESS: 64
     COMPILER: msvc
-  - PYVER: 35
-    BITTNESS: 86
-    COMPILER: msvc
-  - PYVER: 27
-    BITTNESS: 86
   - PYVER: 34
     BITTNESS: 86
   - PYVER: 27
@@ -100,15 +100,15 @@ build_script:
 
     Check-Error
 
+    $WHEEL_VERSION_T = python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
+
+    Check-Error
+
+    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER', 'kivy', '__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION_T','$WHEEL_VERSION_T`.$WHEEL_DATE`.$GIT_TAG`.dev0');f.close();f=open(kv,'w');f.write(s);f.close()"
+
+    Check-Error
+
     $WHEEL_VERSION = python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
-
-    Check-Error
-
-    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER', 'kivy', '__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION','$WHEEL_VERSION`_$WHEEL_DATE`_git_$GIT_TAG');f.close();f=open(kv,'w');f.write(s);f.close()"
-
-    Check-Error
-
-    python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
 
     Check-Error
 
@@ -243,11 +243,11 @@ build_script:
       Check-Error
       echo "Nightly file: $env:WHEEL_DIR\$WHEEL_FNAME"
       Check-Error
-      $NEW_WHEEL_FNAME = python -c "print('$WHEEL_FNAME'.replace('-cp', '$WHEEL_NAME', 1))"
+      $NEW_WHEEL_FNAME = python -c "print('$WHEEL_FNAME'.replace('$WHEEL_VERSION_T.Replace("-",".")', '$WHEEL_VERSION', 1))"
       Check-Error
       if ($WHEEL_FNAME -ne $NEW_WHEEL_FNAME) {
-        echo "Renaming from $WHEEL_FNAME to $NEW_WHEEL_FNAME"
-        Copy-Item "$env:WHEEL_DIR\$WHEEL_FNAME" "$NEW_WHEEL_FNAME"
+        echo "Copying from $WHEEL_FNAME to $NEW_WHEEL_FNAME"
+        Copy-Item "$env:WHEEL_DIR\$WHEEL_FNAME" "$env:WHEEL_DIR\$NEW_WHEEL_FNAME"
         Check-Error
       }
 
