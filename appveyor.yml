@@ -136,6 +136,10 @@ build_script:
 
     if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
       $DO_WHEEL = "False"
+
+      # remove later
+
+      $DO_WHEEL = "True"
     }
 
     echo "test=$env:DO_TEST, make_wheel=$DO_WHEEL"
