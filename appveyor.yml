@@ -100,17 +100,19 @@ build_script:
 
     Check-Error
 
-    $WHEEL_VERSION_T = python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error".Replace("-dev0", "")
+    $WHEEL_VERSION_T = python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
 
     Check-Error
 
-    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER', 'kivy', '__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION_T','$WHEEL_VERSION_T`.$WHEEL_DATE`.$GIT_TAG`.dev0');f.close();f=open(kv,'w');f.write(s);f.close()"
+    python -c "from os.path import join;kv=join('$env:APPVEYOR_BUILD_FOLDER','kivy','__init__.py');f=open(kv);s=f.read().replace('$WHEEL_VERSION_T','$WHEEL_VERSION_T`.$WHEEL_DATE`.$GIT_TAG`.dev0').replace('-dev0','');f.close();f=open(kv,'w');f.write(s);f.close()"
 
     Check-Error
 
     $WHEEL_VERSION = python -c "import kivy;print(kivy.__version__)" --config "kivy:log_level:error"
 
     Check-Error
+
+    echo "Kivy version is: $WHEEL_VERSION"
 
     python -c "import sys;print('Python version is {}'.format(sys.version))"
 
@@ -243,11 +245,11 @@ build_script:
       python setup.py bdist_wheel -d "$env:WHEEL_DIR"
       Check-Error
 
-      $WHEEL_FNAME = python -c "from os import listdir;print(listdir(r'$env:WHEEL_DIR')[0])"
+      $WHEEL_FNAME = python -c "from os import listdir;print(listdir(r'$env:WHEEL_DIR')[0])".Replace("_dev0", "")
       Check-Error
       echo "Wheel file: $env:WHEEL_DIR\$WHEEL_FNAME"
       Check-Error
-      $NEW_WHEEL_FNAME = python -c "print('$WHEEL_FNAME'.replace('.$WHEEL_DATE', '').replace('.$GIT_TAG`.', ''))"
+      $NEW_WHEEL_FNAME = python -c "print('$WHEEL_FNAME'.replace('$WHEEL_DATE', '').replace('.$GIT_TAG`.', ''))"
       Check-Error
 
       echo "Copying from $WHEEL_FNAME to nightly $NEW_WHEEL_FNAME"
