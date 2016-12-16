@@ -17,7 +17,7 @@ try:
     import opencv as cv
     import opencv.highgui as hg
 except ImportError:
-    import cv
+    import cv2.cv as cv
 
     class Hg(object):
         '''
